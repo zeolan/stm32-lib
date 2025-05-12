@@ -93,7 +93,8 @@ void Lcd_cursor(Lcd_HandleTypeDef * lcd, uint8_t row, uint8_t col);
 Lcd_HandleTypeDef Lcd_create(
 	Lcd_PortType port[], Lcd_PinType pin[],
 	Lcd_PortType rs_port, Lcd_PinType rs_pin,
-	Lcd_PortType en_port, Lcd_PinType en_pin, Lcd_ModeTypeDef mode
+	Lcd_PortType en_port, Lcd_PinType en_pin,
+	Lcd_ModeTypeDef mode
 );
 
 void Lcd_write_command(Lcd_HandleTypeDef * lcd, uint8_t command);
