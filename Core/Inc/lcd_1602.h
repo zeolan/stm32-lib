@@ -12,7 +12,6 @@
 #include "stm32f1xx_hal.h"
 #include "string.h"
 #include "stdio.h"
-#include "main.h"
 
 // For row start addresses
 extern const uint8_t ROW_16[];
@@ -23,33 +22,40 @@ extern const uint8_t ROW_16[];
 
 #define RETURN_HOME 0x02
 
-#define ENTRY_MODE_SET 0x04			// Entry mode group:
-#define OPT_ENABLE_SHIFT 0x01			// Enable display shift
-#define OPT_CURSOR_INCREMENT 0x02		// Cursor increment
+#define ENTRY_MODE_SET			0x04	// Entry mode group:
+#define OPT_ENABLE_SHIFT		0x01		// Enable display shift: 0x01 - enable, 0x00 - disable
+#define OPT_CURSOR_INCREMENT	0x02		// Cursor increment: 0x02 - increment, 0x00 - decrement
+#define ENTRY_MODE_CURS_INC		0x04|0x02	// Cursor increment command
+#define ENTRY_MODE_CURS_DEC		0x04|0x00	// Cursor decrement command
 
-#define DISPLAY_ON_OFF_CONTROL 0x08	// Display control group:
-#define OPT_DISPLAY_ON 0x04				// Turn on display
-#define OPT_CURSOR_ON 0x02				// Turn on cursor
-#define OPT_CURSOR_OFF 0x00				// Turn off cursor
-#define OPT_BLINK_ON 0x01				// Turn on cursor blink
-#define OPT_BLINK_OFF 0x00				// Turn off cursor blink
+#define DISPLAY_ON_OFF_CONTROL	0x08	// Display control group:
+#define OPT_DISPLAY_ON			0x04		// Turn on display
+#define OPT_DISPLAY_OFF			0x00		// Turn off display
+#define OPT_CURSOR_ON			0x02		// Turn on cursor
+#define OPT_CURSOR_OFF			0x00		// Turn off cursor
+#define OPT_BLINK_ON			0x01		// Turn on cursor blink
+#define OPT_BLINK_OFF			0x00		// Turn off cursor blink
 
-#define CURSOR_DISPLAY_SHIFT 0x10	// Move and shift cursor
-#define OPT_DISPLAY_SHIFT 0x08
-#define OPT_CURSOR_SHIFT 0x00
-#define OPT_RIGHT_SHIFT 0x04
-#define OPT_LEFT_SHIFT 0x00
+#define CURSOR_DISPLAY_SHIFT	0x10	// Move and shift cursor
+#define OPT_DISPLAY_SHIFT		0x08
+#define OPT_CURSOR_SHIFT		0x00
+#define OPT_RIGHT_SHIFT			0x04
+#define OPT_LEFT_SHIFT			0x00
+#define CURSOR_LEFT_SHIFT		0x10		// Cursor left shift
+#define CURSOR_RIGHT_SHIFT		0x14		// Cursor right shift
+#define DISPLAY_LEFT_SHIFT		0x18		// Display left shift
+#define DISPLAY_RIGHT_SHIFT		0x1C		// Display right shift
 
-#define FUNCTION_SET 0x20			// Function set group:
-#define OPT_8_BIT_MODE 0x10 			// Set interface data length 8-bit
-#define OPT_4_BIT_MODE 0x00 			// Set interface data length 4-bit
-#define OPT_2_LINES_MODE 0x08 			// Set number of display lines 2
-#define OPT_1_LINES_MODE 0x00 			// Set number of display lines 1
-#define OPT_5_10_DOTS_FONT 0x04 		// Set alternate font 5x10 dots
+#define FUNCTION_SET			0x20	// Function set group:
+#define OPT_8_BIT_MODE			0x10 		// Set interface data length 8-bit
+#define OPT_4_BIT_MODE			0x00 		// Set interface data length 4-bit
+#define OPT_2_LINES_MODE		0x08 		// Set number of display lines 2
+#define OPT_1_LINES_MODE		0x00 		// Set number of display lines 1
+#define OPT_5_10_DOTS_FONT		0x04 		// Set alternate font 5x10 dots
 
-#define SETCGRAM_ADDR 0x040			// Set CGRAM address group:
+#define SET_CGRAM_ADDR			0x040	// Set CGRAM address group:
 
-#define SET_DDRAM_ADDR 0x80			// Set DDRAM address group:
+#define SET_DDRAM_ADDR			0x80	// Set DDRAM address group:
 
 /************************************** Helper macros **************************************/
 
@@ -88,6 +94,7 @@ typedef struct {
 
 void Lcd_init(Lcd_HandleTypeDef * lcd);
 void Lcd_string(Lcd_HandleTypeDef * lcd, char * string);
+void Lcd_char(Lcd_HandleTypeDef * lcd, char ch);
 void Lcd_cursor(Lcd_HandleTypeDef * lcd, uint8_t row, uint8_t col);
 
 Lcd_HandleTypeDef Lcd_create(

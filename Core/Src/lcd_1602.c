@@ -80,6 +80,10 @@ void Lcd_string(Lcd_HandleTypeDef * lcd, char * string) {
 	}
 }
 
+void Lcd_char(Lcd_HandleTypeDef * lcd, char ch) {
+	lcd_write_data(lcd, ch);
+}
+
 /**
  * Set the cursor position
  */
@@ -101,7 +105,7 @@ void Lcd_shift_left(Lcd_HandleTypeDef * lcd) {
 }
 
 void Lcd_define_char(Lcd_HandleTypeDef * lcd, uint8_t code, uint8_t bitmap[]) {
-	lcd_write_command(lcd, SETCGRAM_ADDR + (code << 3));
+	lcd_write_command(lcd, SET_CGRAM_ADDR + (code << 3));
 
 	for(uint8_t i=0;i<8;++i) {
 		lcd_write_data(lcd, bitmap[i]);
@@ -156,3 +160,49 @@ void lcd_write(Lcd_HandleTypeDef * lcd, uint8_t data, uint8_t len) {
 	HAL_GPIO_WritePin(lcd->en_port, lcd->en_pin, 0);
 	DELAY(1);
 }
+
+//Code snippet to check LCD functions
+//switch (keyPressed) {
+//	case '1':					// Cursor ON / OFF
+//		keyboard_toggle++;
+//		keyboard_toggle % 2 ?
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_ON | OPT_CURSOR_ON) :
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_ON | OPT_CURSOR_OFF);
+//		break;
+//	case '2':					// Blink ON / OFF
+//		keyboard_toggle++;
+//		keyboard_toggle % 2 ?
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_ON | OPT_CURSOR_OFF | OPT_BLINK_ON) :
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_ON | OPT_CURSOR_OFF | OPT_BLINK_OFF);
+//		break;
+//	case '3':					// Display ON / OFF
+//		keyboard_toggle++;
+//		keyboard_toggle % 2 ?
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_ON | OPT_CURSOR_OFF | OPT_BLINK_OFF) :
+//				Lcd_write_command(&lcd, DISPLAY_ON_OFF_CONTROL | OPT_DISPLAY_OFF | OPT_CURSOR_OFF | OPT_BLINK_OFF);
+//		break;
+//	case '4':					// Cursor shift LEFT
+//		Lcd_write_command(&lcd, CURSOR_LEFT_SHIFT);
+//		break;
+//	case '5':					// Cursor shift RIGHT
+//		Lcd_write_command(&lcd, CURSOR_RIGHT_SHIFT);
+//		break;
+//	case '7':					// Display shift LEFT
+//		Lcd_write_command(&lcd, DISPLAY_LEFT_SHIFT);
+//		break;
+//	case '8':					// Display shift RIGHT
+//		Lcd_write_command(&lcd, DISPLAY_RIGHT_SHIFT);
+//		break;
+//	case '*':					// Show char
+//		keyboard_toggle++;
+//		Lcd_cursor(&lcd, 0, 0);
+//		Lcd_clear(&lcd);
+//		for (keyboard_toggle=0; keyboard_toggle<78; keyboard_toggle++) {
+//			if (keyboard_toggle==39) Lcd_cursor(&lcd, 1, 0);
+//			Lcd_char(&lcd, 0x20 + keyboard_toggle);
+//			//Lcd_char(&lcd, 0xB0 + keyboard_toggle);	239 - grad sign
+//		}
+//		break;
+//	default:
+//		break;
+//};
